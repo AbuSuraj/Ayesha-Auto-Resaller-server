@@ -20,7 +20,14 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
- 
+    const categoryCollection = client.db("ayeshaAutoReseller").collection("categories");
+// add a categories to db
+app.post('/addcategory',async (req,res) =>{
+  const category = req.body;
+  const result = await categoryCollection.insertOne(category);
+  res.send(result);
+})
+
 
  
   } finally {
