@@ -21,6 +21,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const categoryCollection = client.db("ayeshaAutoReseller").collection("categories");
+    const productCollection = client.db("ayeshaAutoReseller").collection("products");
 // add a categories to db
 app.post('/addcategory',async (req,res) =>{
   const category = req.body;
@@ -34,6 +35,13 @@ app.get('/categories', async( req,res) =>{
   const cursor = categoryCollection.find(query);
   const category = await cursor.toArray();
   res.send(category)
+})
+
+// add a product to db
+app.post('/addproduct',async(req,res) =>{
+  const product = req.body;
+  const result = await productCollection.insertOne(product);
+  res.send(result);
 })
  
   } finally {
