@@ -28,7 +28,13 @@ app.post('/addcategory',async (req,res) =>{
   res.send(result);
 })
 
-
+// read category from db
+app.get('/categories', async( req,res) =>{
+  const query = {};
+  const cursor = categoryCollection.find(query);
+  const category = await cursor.toArray();
+  res.send(category)
+})
  
   } finally {
   }
