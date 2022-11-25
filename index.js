@@ -30,7 +30,7 @@ app.post('/addcategory',async (req,res) =>{
 })
 
 // read category from db
-app.get('/categories', async( req,res) =>{
+app.get('/categories', async(req,res) =>{
   const query = {};
   const cursor = categoryCollection.find(query);
   const category = await cursor.toArray();
@@ -45,8 +45,9 @@ app.post('/addproduct',async(req,res) =>{
 })
 
 // read products from db
-app.get('/products', async( req,res) =>{
-  const query = {};
+app.get('/category/:id', async( req,res) =>{
+  const id = req.params.id;
+  const query = { categoryId: id };
   const cursor = productCollection.find(query);
   const products = await cursor.toArray();
   res.send(products)
