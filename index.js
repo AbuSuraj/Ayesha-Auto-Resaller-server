@@ -113,6 +113,14 @@ app.get('/buyers', async(req,res)=>{
   res.send(buyers)
 
 })
+
+// delete a buyer 
+app.delete("/buyer/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: ObjectId(id) };
+  const result = await usersCollection.deleteOne(query);
+  res.send(result);
+});
 // my products get api
 app.get('/myproducts/seller/:email', async(req,res)=>{
    const email = req.params.email;
