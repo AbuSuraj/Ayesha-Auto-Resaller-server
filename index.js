@@ -137,9 +137,25 @@ app.get('/myorders/buyer/:email', async(req,res)=>{
   const cursor = bookingsCollection.find(query);
   const myOrders = await cursor.toArray();
   res.send(myOrders)
-
 })
 
+ // jwt 
+
+ app.get('/jwt',async(req,res)=>{
+    
+  const email = req.query.email;
+  console.log(email)
+  const query = {email: email};
+  const user = await usersCollection.findOne(query);
+  if(user){
+    const token = jwt.sign({email}, process.env.ACCESS_TOKEN, { expiresIn: '1h' });
+    return res.send({accessToken:token})
+  }
+  res.status(403).send({
+    message:'Unauthorized access',
+    accessToken:''
+  })
+})
   } finally {
   }
 }
