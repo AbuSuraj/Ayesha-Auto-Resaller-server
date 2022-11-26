@@ -104,6 +104,15 @@ app.delete("/seller/:id", async (req, res) => {
   res.send(result);
 });
 
+// Get all buyers
+app.get('/buyers', async(req,res)=>{
+   
+  const query = {accountType: 'buyer'};
+  const cursor = usersCollection.find(query);
+  const buyers = await cursor.toArray();
+  res.send(buyers)
+
+})
 // my products get api
 app.get('/myproducts/seller/:email', async(req,res)=>{
    const email = req.params.email;
