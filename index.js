@@ -22,6 +22,7 @@ async function run() {
   try {
     const categoryCollection = client.db("ayeshaAutoReseller").collection("categories");
     const productCollection = client.db("ayeshaAutoReseller").collection("products");
+    const usersCollection = client.db("ayeshaAutoReseller").collection("users");
 // add a categories to db
 app.post('/addcategory',async (req,res) =>{
   const category = req.body;
@@ -52,7 +53,12 @@ app.get('/category/:id', async( req,res) =>{
   const products = await cursor.toArray();
   res.send(products)
 })
- 
+ // add users to db
+app.post('/users',async(req,res) =>{
+  const users = req.body;
+  const result = await usersCollection.insertOne(users);
+  res.send(result);
+})
   } finally {
   }
 }
