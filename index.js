@@ -113,6 +113,15 @@ app.get('/myproducts/seller/:email', async(req,res)=>{
   res.send(myproducts)
 
 })
+// my orders get api
+app.get('/myorders/buyer/:email', async(req,res)=>{
+   const email = req.params.email;
+  const query = { email};
+  const cursor = bookingsCollection.find(query);
+  const myOrders = await cursor.toArray();
+  res.send(myOrders)
+
+})
 
   } finally {
   }
