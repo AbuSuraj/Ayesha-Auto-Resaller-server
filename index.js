@@ -104,7 +104,15 @@ app.delete("/seller/:id", async (req, res) => {
   res.send(result);
 });
 
+// my products get api
+app.get('/myproducts/seller/:email', async(req,res)=>{
+   const email = req.params.email;
+  const query = { email};
+  const cursor = productCollection.find(query);
+  const myproducts = await cursor.toArray();
+  res.send(myproducts)
 
+})
 
   } finally {
   }
