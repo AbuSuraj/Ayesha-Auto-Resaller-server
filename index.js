@@ -18,6 +18,25 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+function verifyJWT(req, res, next) {
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+      return res.status(401).send('unauthorized access');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+      if (err) {
+          return res.status(403).send({ message: 'forbidden access' })
+      }
+      req.decoded = decoded;
+      next();
+  })
+
+}
+
 async function run() {
   try {
     const categoryCollection = client.db("ayeshaAutoReseller").collection("categories");
@@ -66,6 +85,19 @@ app.post('/bookings',async(req,res) =>{
   const result = await bookingsCollection.insertOne(bookings);
   res.send(result);
 })
+
+// Get all sellers
+app.get('/sellers', async(req,res)=>{
+   
+  const query = {accountType: 'seller'};
+  const cursor = usersCollection.find(query);
+  const sellers = await cursor.toArray();
+  res.send(sellers)
+
+})
+
+
+
   } finally {
   }
 }
