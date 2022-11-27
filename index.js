@@ -193,8 +193,8 @@ app.patch('/products/advertise/:id',async(req,res)=>{
   const result = await productCollection.updateOne(filter,updateDoc,options);
   res.send(result);
 })
-// verify user 
-app.patch('/verifyUser/:id',async(req,res)=>{
+// verify seller 
+app.patch('/verifySeller/:id',async(req,res)=>{
   const id = req.params.id;
   const filter = { _id: ObjectId(id) }
   console.log(id)
