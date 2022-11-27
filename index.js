@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -44,6 +45,7 @@ async function run() {
     const usersCollection = client.db("ayeshaAutoReseller").collection("users");
     const bookingsCollection = client.db("ayeshaAutoReseller").collection("bookings");
     const reportsCollection = client.db("ayeshaAutoReseller").collection("reports");
+    const paymentsCollection = client.db("ayeshaAutoReseller").collection("payments");
 // add a categories to db
 app.post('/addcategory',async (req,res) =>{
   const category = req.body;
@@ -243,6 +245,52 @@ app.get('/advertisementItem', async (req, res) => {
   const cursor = productCollection.find(query);
   const advertisementItem = await cursor.toArray();
   res.send(advertisementItem)
+})
+
+// payment
+
+app.post('/create-payment-intent', async (req, res) => {
+  const booking = req.body;
+  console.log(booking)
+  const price = booking.resalePrice;
+  const amount = 1000 * 100;
+
+  const paymentIntent = await stripe.paymentIntents.create({
+      currency: 'bdt',
+      amount: amount,
+      "payment_method_types": [
+          "card"
+      ]
+  });
+  res.send({
+      clientSecret: paymentIntent.client_secret,
+  });
+});
+
+app.post('/payments', async (req, res) =>{
+  const payment = req.body;
+  const result = await paymentsCollection.insertOne(payment);
+  const id = payment.bookingId
+  const product_id = payment.product_id
+  const filter = {_id: ObjectId(id)}
+  const query = {_id: ObjectId(product_id) }
+  const updatedDoc = {
+      $set: {
+          paid: true,
+          transactionId: payment.transactionId
+      }
+  }
+  const updatedResult = await bookingsCollection.updateOne(filter, updatedDoc)
+  const updatedResult2 = await productCollection.updateOne(query, updatedDoc)
+  res.send(result);
+})
+
+app.get('/bookings/:id',async(req,res)=>{
+  const bookingId = req.params.id;
+  console.log(bookingId);
+  const query = {_id:ObjectId(bookingId)}
+  const result = await bookingsCollection.findOne(query)
+  res.send(result);
 })
   }
    finally {
