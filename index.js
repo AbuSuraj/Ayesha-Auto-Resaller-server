@@ -192,6 +192,14 @@ app.patch('/products/advertise/:id',async(req,res)=>{
   const result = await productCollection.updateOne(filter,updateDoc,options);
   res.send(result);
 })
+
+// advertisementItem api 
+app.get('/advertisementItem', async (req, res) => {
+  const query = {isAdvertised: 'true'};
+  const cursor = productCollection.find(query);
+  const advertisementItem = await cursor.toArray();
+  res.send(advertisementItem)
+})
   }
    finally {
   }
