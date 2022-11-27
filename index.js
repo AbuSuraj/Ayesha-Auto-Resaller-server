@@ -177,7 +177,21 @@ app.get('/users/buyer/:email', async (req, res) => {
   const user = await usersCollection.findOne(query);
   res.send({ isBuyer: user?.accountType === 'buyer' });
 })
+// change product status api
 
+app.patch('/products/advertise/:id',async(req,res)=>{
+  const id = req.params.id;
+  const filter = { _id: ObjectId(id) }
+  console.log(id)
+  const options = {upsert: true};
+  const updateDoc = {
+    $set:{
+      isAdvertised: 'true'
+    }
+  }
+  const result = await productCollection.updateOne(filter,updateDoc,options);
+  res.send(result);
+})
   }
    finally {
   }
