@@ -57,6 +57,28 @@ app.post('/report',async (req,res) =>{
   res.send(result);
 })
 
+// read reportedItem from db
+app.get('/report', async(req,res) =>{
+  const query = {};
+  const cursor = reportsCollection.find(query);
+  const report = await cursor.toArray();
+  res.send(report)
+})
+// delete a report 
+app.delete("/report/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { product_id: id };
+  const result = await reportsCollection.deleteOne(query);
+  res.send(result);
+});
+// delete a reportedItem 
+app.delete("/reportedItem/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: ObjectId(id) };
+  const result = await productCollection.deleteOne(query);
+  res.send(result);
+});
+
 // read category from db
 app.get('/categories', async(req,res) =>{
   const query = {};
