@@ -46,14 +46,27 @@ async function run() {
     const bookingsCollection = client.db("ayeshaAutoReseller").collection("bookings");
     const reportsCollection = client.db("ayeshaAutoReseller").collection("reports");
     const paymentsCollection = client.db("ayeshaAutoReseller").collection("payments");
+    // verify admin
+
+     const verifyAdmin = async (req, res, next) => {
+      const decodedEmail = req.decoded.email;
+      const query = { email: decodedEmail };
+      const user = await usersCollection.findOne(query);
+
+      if (user?.accountType !== 'admin') {
+          return res.status(403).send({ message: 'forbidden access' })
+      }
+      next();
+  }
 // add a categories to db
-app.post('/addcategory',async (req,res) =>{
+app.post('/addcategory',verifyJWT,verifyAdmin,async (req,res) =>{
   const category = req.body;
   const result = await categoryCollection.insertOne(category);
   res.send(result);
 })
+
 // add a reported item to db
-app.post('/report',async (req,res) =>{
+app.post('/report',verifyJWT,async (req,res) =>{
   const report = req.body;
   const result = await reportsCollection.insertOne(report);
   res.send(result);
@@ -67,14 +80,14 @@ app.get('/report', async(req,res) =>{
   res.send(report)
 })
 // delete a report 
-app.delete("/report/:id", async (req, res) => {
+app.delete("/report/:id",verifyJWT,verifyAdmin , async (req, res) => {
   const id = req.params.id;
   const query = { product_id: id };
   const result = await reportsCollection.deleteOne(query);
   res.send(result);
 });
 // delete a reportedItem 
-app.delete("/reportedItem/:id", async (req, res) => {
+app.delete("/reportedItem/:id",verifyJWT,verifyAdmin , async (req, res) => {
   const id = req.params.id;
   const query = { _id: ObjectId(id) };
   const result = await productCollection.deleteOne(query);
@@ -90,14 +103,14 @@ app.get('/categories', async(req,res) =>{
 })
 
 // add a product to db
-app.post('/addproduct',async(req,res) =>{
+app.post('/addproduct',verifyJWT,async(req,res) =>{
   const product = req.body;
   const result = await productCollection.insertOne(product);
   res.send(result);
 })
 
 // read products from db
-app.get('/category/:id', async( req,res) =>{
+app.get('/category/:id',verifyJWT, async( req,res) =>{
   const id = req.params.id;
   const query = { categoryId: id, isPaid:false };
   const cursor = productCollection.find(query);
@@ -105,20 +118,21 @@ app.get('/category/:id', async( req,res) =>{
   res.send(products)
 })
  // add users to db
+//  confusion
 app.post('/users',async(req,res) =>{
   const users = req.body;
   const result = await usersCollection.insertOne(users);
   res.send(result);
 })
  // add bookings to db
-app.post('/bookings',async(req,res) =>{
+app.post('/bookings',verifyJWT,async(req,res) =>{
   const bookings = req.body;
   const result = await bookingsCollection.insertOne(bookings);
   res.send(result);
 })
 
 // Get all sellers
-app.get('/sellers', async(req,res)=>{
+app.get('/sellers',verifyJWT, async(req,res)=>{
    
   const query = {accountType: 'seller'};
   const cursor = usersCollection.find(query);
@@ -128,7 +142,7 @@ app.get('/sellers', async(req,res)=>{
 })
 
 // delete a seller 
-app.delete("/seller/:id", async (req, res) => {
+app.delete("/seller/:id",verifyJWT,verifyAdmin, async (req, res) => {
   const id = req.params.id;
   const query = { _id: ObjectId(id) };
   const result = await usersCollection.deleteOne(query);
@@ -136,7 +150,7 @@ app.delete("/seller/:id", async (req, res) => {
 });
 
 // Get all buyers
-app.get('/buyers', async(req,res)=>{
+app.get('/buyers',verifyJWT,verifyAdmin, async(req,res)=>{
    
   const query = {accountType: 'buyer'};
   const cursor = usersCollection.find(query);
@@ -146,14 +160,14 @@ app.get('/buyers', async(req,res)=>{
 })
 
 // delete a buyer 
-app.delete("/buyer/:id", async (req, res) => {
+app.delete("/buyer/:id",verifyJWT,verifyAdmin, async (req, res) => {
   const id = req.params.id;
   const query = { _id: ObjectId(id) };
   const result = await usersCollection.deleteOne(query);
   res.send(result);
 });
 // my products get api
-app.get('/myproducts/seller/:email', async(req,res)=>{
+app.get('/myproducts/seller/:email',verifyJWT, async(req,res)=>{
    const email = req.params.email;
   const query = { email};
   const cursor = productCollection.find(query);
@@ -162,14 +176,14 @@ app.get('/myproducts/seller/:email', async(req,res)=>{
 
 })
 // deleteting a product by seller 
-app.delete("/product/:id", async (req, res) => {
+app.delete("/product/:id", verifyJWT,async (req, res) => {
   const id = req.params.id;
   const query = { _id: ObjectId(id) };
   const result = await productCollection.deleteOne(query);
   res.send(result);
 });
 // my orders get api
-app.get('/myorders/buyer/:email', async(req,res)=>{
+app.get('/myorders/buyer/:email', verifyJWT,async(req,res)=>{
    const email = req.params.email;
   const query = { email};
   const cursor = bookingsCollection.find(query);
@@ -195,21 +209,21 @@ app.get('/myorders/buyer/:email', async(req,res)=>{
   })
 })
 // isAdmin api
-app.get('/users/admin/:email', async (req, res) => {
+app.get('/users/admin/:email',verifyJWT, async (req, res) => {
   const email = req.params.email;
   const query = { email }
   const user = await usersCollection.findOne(query);
   res.send({ isAdmin: user?.accountType === 'admin' });
 })
 // isSeller api
-app.get('/users/seller/:email', async (req, res) => {
+app.get('/users/seller/:email',verifyJWT, async (req, res) => {
   const email = req.params.email;
   const query = { email }
   const user = await usersCollection.findOne(query);
   res.send({ isSeller: user?.accountType === 'seller' });
 })
 // isBuyer api
-app.get('/users/buyer/:email', async (req, res) => {
+app.get('/users/buyer/:email',verifyJWT, async (req, res) => {
   const email = req.params.email;
   const query = { email }
   const user = await usersCollection.findOne(query);
@@ -218,7 +232,7 @@ app.get('/users/buyer/:email', async (req, res) => {
 
 // change product status api
 
-app.patch('/products/advertise/:id',async(req,res)=>{
+app.patch('/products/advertise/:id',verifyJWT,async(req,res)=>{
   const id = req.params.id;
   const filter = { _id: ObjectId(id) }
   console.log(id)
@@ -232,7 +246,7 @@ app.patch('/products/advertise/:id',async(req,res)=>{
   res.send(result);
 })
 // verify seller 
-app.patch('/verifySeller/:id',async(req,res)=>{
+app.patch('/verifySeller/:id',verifyJWT,verifyAdmin ,async(req,res)=>{
   const id = req.params.id;
   const filter = { _id: ObjectId(id) }
   console.log(id)
