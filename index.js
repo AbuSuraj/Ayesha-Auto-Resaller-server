@@ -99,7 +99,7 @@ app.post('/addproduct',async(req,res) =>{
 // read products from db
 app.get('/category/:id', async( req,res) =>{
   const id = req.params.id;
-  const query = { categoryId: id };
+  const query = { categoryId: id, isPaid:false };
   const cursor = productCollection.find(query);
   const products = await cursor.toArray();
   res.send(products)
@@ -241,7 +241,7 @@ app.patch('/verifySeller/:id',async(req,res)=>{
 
 // advertisementItem api 
 app.get('/advertisementItem', async (req, res) => {
-  const query = {isAdvertised: 'true'};
+  const query = {isAdvertised: 'true', isPaid: false};
   const cursor = productCollection.find(query);
   const advertisementItem = await cursor.toArray();
   res.send(advertisementItem)
@@ -280,8 +280,14 @@ app.post('/payments', async (req, res) =>{
           transactionId: payment.transactionId
       }
   }
+  const updatedDoc2 = {
+      $set: {
+       
+          isPaid:true
+      }
+  }
   const updatedResult = await bookingsCollection.updateOne(filter, updatedDoc)
-  const updatedResult2 = await productCollection.updateOne(query, updatedDoc)
+  const updatedResult2 = await productCollection.updateOne(query, updatedDoc2)
   res.send(result);
 })
 
