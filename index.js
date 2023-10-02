@@ -158,20 +158,32 @@ app.post('/report',verifyJWT,async (req,res) =>{
     app.get('/sellers', verifyJWT, async (req, res) => {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
-      const skip = (page - 1)* limit;
-
+      const skip = (page - 1) * limit;
+    
       const query = { accountType: 'seller' };
-      const cursor = usersCollection.find(query).skip(skip).limit(limit);
+      const sortColumn = req.query.sort || 'name'; // Default to sorting by 'name'
+      const sortOrder = req.query.order || 'asc'; // Default to ascending order
+    
+      const sortOptions = {};
+      sortOptions[sortColumn] = sortOrder === 'asc' ? 1 : -1;
+    
+      const cursor = usersCollection
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort(sortOptions); // Apply sorting options
+    
       const sellers = await cursor.toArray();
       const totalSellers = await usersCollection.countDocuments(query);
-
-      res.send(
-      {data:sellers,
+    
+      res.send({
+        data: sellers,
         total: totalSellers,
         currentPage: page,
-        totalPages: Math.ceil(totalSellers/ limit),
+        totalPages: Math.ceil(totalSellers / limit),
       });
     });
+    
 
     // delete a seller
     app.delete('/seller/:id', verifyJWT, verifyAdmin, async (req, res) => {
