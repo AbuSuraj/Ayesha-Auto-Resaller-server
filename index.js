@@ -83,20 +83,34 @@ app.post('/report',verifyJWT,async (req,res) =>{
 
     // read reportedItem from db
     app.get('/report', async (req, res) => {
-      const page = parseInt(req.params.page) || 1;
-      const limit = parseInt(req.params.limit) || 10;
-      const skip = (page -1) * limit;
-
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+      const sortBy = req.query.sort || 'productName'; // Default sorting by productName
+      const order = req.query.order || 'asc'; // Default sorting order is ascending
       const query = {};
-      const cursor = reportsCollection.find(query).skip(skip).limit(limit);
+    
+      const sortOptions = {};
+      sortOptions[sortBy] = order === 'asc' ? 1 : -1;
+    
+      const cursor = reportsCollection
+        .find(query)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limit);
+    
       const report = await cursor.toArray();
-      const totalReports = await  reportsCollection.countDocuments(query);
-      res.send({data:report,
+      const totalReports = await reportsCollection.countDocuments(query);
+    
+      res.send({
+        data: report,
         total: totalReports,
         currentPage: page,
-        totalPages: Math.ceil(totalReports / limit)
+        totalPages: Math.ceil(totalReports / limit),
       });
     });
+    
+
     // delete a report
     app.delete('/report/:id', verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
@@ -169,10 +183,9 @@ app.post('/report',verifyJWT,async (req,res) =>{
     
       const cursor = usersCollection
         .find(query)
+        .sort(sortOptions)
         .skip(skip)
-        .limit(limit)
-        .sort(sortOptions); // Apply sorting options
-    
+        .limit(limit); 
       const sellers = await cursor.toArray();
       const totalSellers = await usersCollection.countDocuments(query);
     
@@ -195,18 +208,28 @@ app.post('/report',verifyJWT,async (req,res) =>{
 
     // Get all buyers
     app.get('/buyers', verifyJWT, verifyAdmin, async (req, res) => {
-      const page = parseInt(req.query.page) || 1; // Get the requested page number
-      const limit = parseInt(req.query.limit) || 10; // Set a default limit per page
-      const skip = (page - 1) * limit; // Calculate the number of documents to skip
-
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+    
       const query = { accountType: 'buyer' };
-      const cursor = usersCollection.find(query).skip(skip).limit(limit);
-
+    
+      const sortColumn = req.query.sort || 'name'; // Default to 'name' if no sort column is provided
+      const sortOrder = req.query.order || 'asc'; // Default to 'asc' if no sort order is provided
+    
+      const sortOptions = {};
+      sortOptions[sortColumn] = sortOrder === 'asc' ? 1 : -1;
+    
+      const cursor = usersCollection
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort(sortOptions);
+    
       const buyers = await cursor.toArray();
-
-      // Calculate the total number of buyers (needed for pagination)
+    
       const totalBuyers = await usersCollection.countDocuments(query);
-     
+    
       res.send({
         data: buyers,
         total: totalBuyers,
@@ -214,6 +237,7 @@ app.post('/report',verifyJWT,async (req,res) =>{
         totalPages: Math.ceil(totalBuyers / limit),
       });
     });
+    
 
     // delete a buyer
     app.delete('/buyer/:id', verifyJWT, verifyAdmin, async (req, res) => {
