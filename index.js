@@ -161,6 +161,16 @@ app.post('/report',verifyJWT,async (req,res) =>{
       const result = await usersCollection.insertOne(users);
       res.send(result);
     });
+    // get a  user from db
+ 
+    app.get('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      console.log(email);
+      const query = {email: email}
+      const result = await usersCollection.findOne(query);
+      console.log(result)
+      res.send(result);
+    });
     // add bookings to db
     app.post('/bookings', verifyJWT, async (req, res) => {
       const bookings = req.body;
