@@ -1,6 +1,6 @@
 const Category = require('../models/Category');
 
-exports.addCategory = async (req, res) => {
+exports.addCategory = verifyJWT,verifyAdmin,async (req, res) => {
   try {
     const category = req.body;
     const result = await Category.create(category);
@@ -9,6 +9,11 @@ exports.addCategory = async (req, res) => {
     console.error(error);
     res.status(500).send(error.message);
   }
+  //  async (req,res) =>{
+  //   const category = req.body;
+  //   const result = await categoryCollection.insertOne(category);
+  //   res.send(result);
+  // }
 };
 
 exports.getCategories = async (req, res) => {

@@ -3,21 +3,22 @@ const cors = require('cors');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const dbConnect = require('./utils/DB/dbConnect');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const port = process.env.PORT || 5000;
+const categoriesRoute =  require("./routes/category/categories.route")
+
 
 // middle wares
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.sc93kvm.mongodb.net/?retryWrites=true&w=majority`;
+dbConnect()
 
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
+
+app.use('/api/v1/categories', categoriesRoute);
+
 
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -67,12 +68,7 @@ async function run() {
       }
       next();
   }
-// add a categories to db
-app.post('/addcategory',verifyJWT,verifyAdmin,async (req,res) =>{
-  const category = req.body;
-  const result = await categoryCollection.insertOne(category);
-  res.send(result);
-})
+
 
 // add a reported item to db
 app.post('/report',verifyJWT,async (req,res) =>{
@@ -429,6 +425,9 @@ app.get('/', (req, res) => {
   res.send('Ayesha Auto Reseller server is running');
 });
 
+app.all('*', (req, res) => {
+  res.send('No route found.');
+})
 app.listen(port, () => {
   console.log(`Ayesha Auto Reseller server running on ${port}`);
 });
