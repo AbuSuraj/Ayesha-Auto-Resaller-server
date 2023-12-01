@@ -1,6 +1,8 @@
-const Category = require('../models/Category');
+// import { verifyJWT, verifyAdmin } from 'path-to-your-authentication-middleware'; // Adjust the path accordingly
+import Category from '../../model/category/Category.js';
 
-exports.addCategory = verifyJWT,verifyAdmin,async (req, res) => {
+
+export const addCategory = async (req, res) => {
   try {
     const category = req.body;
     const result = await Category.create(category);
@@ -9,14 +11,9 @@ exports.addCategory = verifyJWT,verifyAdmin,async (req, res) => {
     console.error(error);
     res.status(500).send(error.message);
   }
-  //  async (req,res) =>{
-  //   const category = req.body;
-  //   const result = await categoryCollection.insertOne(category);
-  //   res.send(result);
-  // }
 };
 
-exports.getCategories = async (req, res) => {
+export const getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
     res.send(categories);
@@ -25,5 +22,5 @@ exports.getCategories = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
+export default { addCategory, getCategories };
 // Add other category-related controller functions here

@@ -1,3 +1,4 @@
+import { MongoClient, ServerApiVersion } from 'mongodb';
 function dbConnect(){
     const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.sc93kvm.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -6,6 +7,7 @@ function dbConnect(){
       useUnifiedTopology: true,
       serverApi: ServerApiVersion.v1,
     });
+    return client
 }
 
-module.exports = dbConnect;
+export default { dbConnect };
