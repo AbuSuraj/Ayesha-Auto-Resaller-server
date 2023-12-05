@@ -6,13 +6,26 @@
 // });
 
 // module.exports = mongoose.model('Category', categorySchema);
-import mongoose from 'mongoose';
+// categoryModel.js
+// models/categoryModel.js
+import { ObjectId } from 'mongodb';
+import client from '../database';
 
-const categorySchema = new mongoose.Schema({
-  categoryName: String,
-  image: String,
-});
+const categoryModel = {
+  getAllCategories: async () => {
+    const categoryCollection = client.db('ayeshaAutoReseller').collection('categories');
+    return await categoryCollection.find({}).toArray();
+  },
 
-const Category = mongoose.model('Category', categorySchema);
+  addCategory: async (category) => {
+    const categoryCollection = client.db('ayeshaAutoReseller').collection('categories');
+    const result = await categoryCollection.insertOne(category);
+    return result;
+  },
 
-export default Category;
+  // Add other category-related functions as needed
+};
+
+export default categoryModel;
+
+ 

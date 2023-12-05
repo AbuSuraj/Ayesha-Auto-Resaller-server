@@ -1,14 +1,24 @@
 import express from 'express';
-import categoryController from '../../controllers/category/category.controller.js';
-const router = express.Router();
+// import categoryController from '../../controllers/category/category.controller.js';
+// const router = express.Router();
 
-// add a categories to db
+// // add a categories to db
 
-router.get('/get-all')
-router.post('/add',categoryController.addCategory)
+// router.get('/get-all')
+// router.post('/add',categoryController.addCategory)
 
    
+// export default router;
+// routes/categoryRoutes.js
+import express from 'express';
+const router = express.Router();
+import categoryController from '../controllers/categoryController';
+
+router.get('/categories', categoryController.getAllCategories);
+router.post('/addcategory', categoryController.addCategory);
+
 export default router;
+
 /**
    * @api {post} /add-new category
    * @apiDescription save new category
