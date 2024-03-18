@@ -1,7 +1,8 @@
 const Product = require('../../model/products/Products.model.js');
-
+const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js'); 
 exports.getProductsByCategoryId = async (req, res) => {
   try {
+    verifyJWT(req, res);
     const categoryId = req.params.id;
     const products = await Product.find({ categoryId });
     res.json(products);

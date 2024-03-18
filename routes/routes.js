@@ -1,37 +1,40 @@
 const express = require('express');
 const router = express.Router();
-
+const { verifyJWT, verifyAdmin } = require('../middleware/checkAuth.js')
 // Import controllers
-const categoryController = require('../controllers/categoryController');
-const reportController = require('../controllers/reportController');
-const userController = require('../controllers/userController');
-const bookingController = require('../controllers/bookingController');
-const paymentController = require('../controllers/paymentController');
+const categoryController = require('../controllers/category/category.controller.js');
+const reportController = require('../controllers//report/report.controller.js');
+const userController = require('../controllers/users/users.controller.js');
+const bookingController = require('../controllers/booking/booking.controller.js');
+const paymentController = require('../controllers/payment/payment.controller.js');
 
 // Routes for categories
-router.post('/categories/add', categoryController.addCategory);
-router.get('/categories', categoryController.getCategories);
-router.get('/category/:id', productController.getProductsByCategoryId);
+router.post('/categories/add', verifyJWT, verifyAdmin,categoryController.addCategory);
+router.get('/categories', verifyJWT,categoryController.getCategories);
+router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
 
 // Routes for reports
-router.post('/report', reportController.addReport);
-router.get('/report', reportController.getReports);
-router.delete('/report/:id', reportController.deleteReport);
+router.post('/report', verifyJWT, reportController.addReport);
+router.get('/report', verifyJWT, reportController.getReports);
+router.delete('/report/:id', verifyJWT, verifyAdmin, reportController.deleteReport);
+
+router.delete('/reportedItem/:id', verifyJWT, verifyAdmin, reportController.deleteReportedItem);
 
 // Routes for users
 router.post('/users', userController.addUser);
 router.get('/user/:email', userController.getUser);
-router.get('/users/admin/:email', userController.isAdmin);
-router.get('/users/seller/:email', userController.isSeller);
-router.get('/users/buyer/:email', userController.isBuyer);
+router.get('/users/admin/:email', verifyJWT, userController.isAdmin);
+router.get('/users/seller/:email', verifyJWT, userController.isSeller);
+router.get('/users/buyer/:email', verifyJWT, userController.isBuyer);
 
 // Routes for bookings
-router.post('/bookings', bookingController.addBooking);
-router.get('/bookings/:id', bookingController.getBooking);
+router.post('/bookings', verifyJWT, bookingController.addBooking);
+router.get('/bookings/:id', verifyJWT, bookingController.getBooking);
 
 // Routes for payments
-router.post('/payments', paymentController.addPayment);
-router.get('/create-payment-intent', paymentController.createPaymentIntent);
+router.post('/payments', verifyJWT, paymentController.addPayment);
+router.get('/create-payment-intent', verifyJWT, paymentController.createPaymentIntent);
+
 
 module.exports = router;
 
