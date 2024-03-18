@@ -1,7 +1,11 @@
 const Category = require('../../model/category/Category.model.js');
-
+const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js'); 
 exports.addCategory = async (req, res) => {
   try {
+// Verify JWT and Admin
+    verifyJWT(req, res);
+    verifyAdmin(req, res);
+
     const categoryData = req.body;
     const result = await Category.create(categoryData);
     res.status(201).json(result);
@@ -13,6 +17,9 @@ exports.addCategory = async (req, res) => {
 
 exports.getCategories = async (req, res) => {
   try {
+// Verify JWT  
+    verifyJWT(req, res);
+
     const categories = await Category.find();
     res.json(categories);
   } catch (error) {
