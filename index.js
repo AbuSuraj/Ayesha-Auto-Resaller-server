@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
+const routes = require('./routes/routes');
 const port = process.env.PORT || 5000;
 
 // middle wares
@@ -36,6 +37,8 @@ function verifyJWT(req, res, next) {
   })
 
 }
+
+app.use('/', routes);
 
 async function run() {
   try {
