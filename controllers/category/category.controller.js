@@ -18,13 +18,14 @@ exports.addCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
   try {
 // Verify JWT  
-    verifyJWT(req, res);
+    // verifyJWT(req, res);
 
     const categories = await Category.find();
     res.json(categories);
-  } catch (error) {
+  }  catch (error) {
     console.error("Error fetching categories:", error);
-    res.status(500).json({ error: "Failed to fetch categories" });
+    res.status(500).json({ error: "Failed to fetch categories", details: error.message });
+  
   }
 };
 

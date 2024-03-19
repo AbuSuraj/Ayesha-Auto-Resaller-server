@@ -18,7 +18,7 @@ router.post('/products/add', verifyJWT, productController.addProduct);
 
 // Routes for categories
 router.post('/categories/add', verifyJWT, verifyAdmin,categoryController.addCategory);
-router.get('/categories', verifyJWT,categoryController.getCategories);
+router.get('/categories',categoryController.getCategories);
 router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
 
 // Routes for reports
