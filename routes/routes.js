@@ -3,10 +3,18 @@ const router = express.Router();
 const { verifyJWT, verifyAdmin } = require('../middleware/checkAuth.js')
 // Import controllers
 const categoryController = require('../controllers/category/category.controller.js');
-const reportController = require('../controllers//report/report.controller.js');
+const reportController = require('../controllers/report/report.controller.js');
 const userController = require('../controllers/users/users.controller.js');
 const bookingController = require('../controllers/booking/booking.controller.js');
+const productController = require('../controllers/products/products.controller.js');
 const paymentController = require('../controllers/payment/payment.controller.js');
+
+// Routes for products
+router.get('/products/advertisement', productController.getAdvertisementItems);
+router.patch('/products/advertisement/:id', verifyJWT, productController.changeProductStatus);
+router.delete('/products/:id', verifyJWT, productController.deleteProduct);
+router.get('/products/seller/:email', verifyJWT, productController.getProductsBySeller);
+router.post('/products/add', verifyJWT, productController.addProduct);
 
 // Routes for categories
 router.post('/categories/add', verifyJWT, verifyAdmin,categoryController.addCategory);

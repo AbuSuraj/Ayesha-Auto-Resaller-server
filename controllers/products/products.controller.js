@@ -12,6 +12,60 @@ exports.getProductsByCategoryId = async (req, res) => {
   }
 };
 
+exports.getAdvertisementItems = async (req, res) => {
+  try {
+    const query = { isAdvertised: true, isPaid: false };
+    const advertisementItems = await Product.find(query);
+    res.json(advertisementItems);
+  } catch (error) {
+    console.error("Error fetching advertisement items:", error);
+    res.status(500).json({ error: "Failed to fetch advertisement items" });
+  }
+};
+
+exports.changeProductStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedProduct = await Product.findByIdAndUpdate(id, { isAdvertised: true }, { new: true });
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error("Error changing product status:", error);
+    res.status(500).json({ error: "Failed to change product status" });
+  }
+};
+
+exports.deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Product.deleteOne({ _id: ObjectId(id) });
+    res.json(result);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({ error: "Failed to delete product" });
+  }
+};
+
+exports.getProductsBySellerEmail = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const myProducts = await Product.find({ email });
+    res.json(myProducts);
+  } catch (error) {
+    console.error("Error fetching products by seller email:", error);
+    res.status(500).json({ error: "Failed to fetch products by seller email" });
+  }
+};
+
+exports.addProduct = async (req, res) => {
+  try {
+    const product = req.body;
+    const newProduct = await Product.create(product);
+    res.json(newProduct);
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ error: "Failed to add product" });
+  }
+};
 // exports.addProduct = async (req, res) => {
 //   try {
 //     const product = req.body;
