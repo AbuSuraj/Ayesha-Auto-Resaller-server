@@ -36,8 +36,8 @@ router.get('/users/seller/:email', verifyJWT, userController.isSeller);
 router.get('/users/buyer/:email', verifyJWT, userController.isBuyer);
 
 // Routes for bookings
-router.post('/bookings', verifyJWT, bookingController.addBooking);
-router.get('/bookings/:id', verifyJWT, bookingController.getBooking);
+router.post('/bookings',  bookingController.addBooking);
+router.get('/bookings/:id', bookingController.getBooking);
 
 // Routes for payments
 router.post('/payments', verifyJWT, paymentController.addPayment);

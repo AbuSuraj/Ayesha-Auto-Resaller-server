@@ -1,3 +1,31 @@
+const Booking = require('../../model/booking/Booking.model.js');
+
+
+exports.addBooking = async (req, res) => {
+  try {
+    const bookingData = req.body;
+    const newBooking = await Booking.create(bookingData);
+    res.json(newBooking);
+  } catch (error) {
+    console.error("Error adding booking:", error);
+    res.status(500).json({ error: "Failed to add booking" });
+  }
+};
+
+exports.getBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findById(id);
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    res.json(booking);
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    res.status(500).json({ error: "Failed to fetch booking" });
+  }
+};
+
 // const Booking = require('../models/Booking');
 
 // exports.addBooking = async (req, res) => {
