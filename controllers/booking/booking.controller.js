@@ -25,6 +25,17 @@ exports.getBooking = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch booking" });
   }
 };
+exports.getBuyerOrders = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const query = { email };
+    const myOrders = await Booking.find(query);
+    res.json(myOrders);
+  } catch (error) {
+    console.error("Error fetching buyer orders:", error);
+    res.status(500).json({ error: "Failed to fetch buyer orders" });
+  }
+};
 
 // const Booking = require('../models/Booking');
 
@@ -51,20 +62,4 @@ exports.getBooking = async (req, res) => {
 
 // // Add other booking-related controller functions here
 // controllers/bookingController.js
-import bookingModel from '../models/bookingModel';
 
-const bookingController = {
-  addBooking: async (req, res) => {
-    try {
-      const booking = req.body;
-      const result = await bookingModel.addBooking(booking);
-      res.send(result);
-    } catch (error) {
-      res.status(500).send({ error: 'Internal Server Error' });
-    }
-  },
-
-  // Add other booking-related controller functions as needed
-};
-
-export default bookingController;

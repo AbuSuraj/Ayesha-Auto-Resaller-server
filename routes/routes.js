@@ -13,7 +13,7 @@ const paymentController = require('../controllers/payment/payment.controller.js'
 router.get('/products/advertisement', productController.getAdvertisementItems);
 router.patch('/products/advertisement/:id', verifyJWT, productController.changeProductStatus);
 router.delete('/products/:id', verifyJWT, productController.deleteProduct);
-router.get('/products/seller/:email', verifyJWT, productController.getProductsBySeller);
+router.get('/products/seller/:email', verifyJWT, productController.getProductsBySellerEmail);
 router.post('/products/add', verifyJWT, productController.addProduct);
 
 // Routes for categories
@@ -35,9 +35,28 @@ router.get('/users/admin/:email', verifyJWT, userController.isAdmin);
 router.get('/users/seller/:email', verifyJWT, userController.isSeller);
 router.get('/users/buyer/:email', verifyJWT, userController.isBuyer);
 
+// Verify seller route
+router.patch('/verifySeller/:id', verifyJWT, verifyAdmin, userController.verifySeller);
+ 
+
+// Delete buyer route
+router.delete('/buyer/:id', verifyJWT, verifyAdmin, userController.deleteBuyer);
+
+// Get all buyers route
+router.get('/buyers', verifyJWT, verifyAdmin, userController.getAllBuyers);
+
+// Delete seller route
+router.delete('/seller/:id', verifyJWT, verifyAdmin, userController.deleteSeller);
+
+// Get all sellers route
+router.get('/sellers', verifyJWT, verifyAdmin, userController.getAllSellers);
+
+
 // Routes for bookings
 router.post('/bookings',  bookingController.addBooking);
 router.get('/bookings/:id', bookingController.getBooking);
+// Route for getting buyer orders
+router.get('/myorders/buyer/:email', verifyJWT, bookingController.getBuyerOrders);
 
 // Routes for payments
 router.post('/payments', verifyJWT, paymentController.addPayment);
@@ -47,27 +66,3 @@ router.get('/create-payment-intent', verifyJWT, paymentController.createPaymentI
 module.exports = router;
 
 
-
-// const express = require('express');
-// const router = express.Router();
-// const paymentRoutes = require('../routes/payment/payment.route.js')
-
-// // payments route 
-// router.use('/payments', paymentRoutes);
-// // const categoryController = require('../controllers/categoryController');
-// // const reportController = require('../controllers/reportController');
-// // const productController = require('../controllers/productController');
-// // const userController = require('../controllers/userController');
-// // const bookingController = require('../controllers/bookingController');
-
-// // // Category routes
-// // router.post('/categories', categoryController.addCategory);
-// // router.get('/categories', categoryController.getCategories);
-
-// // // Report routes
-// // router.post('/report', reportController.addReport);
-// // router.get('/report', reportController.getReports);
-
-// // Add other routes and controllers for reports, products, users, and bookings
-
-// module.exports = router;

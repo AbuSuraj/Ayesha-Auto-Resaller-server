@@ -8,7 +8,10 @@ const bookingSchema = new mongoose.Schema({
   meetingLocation: String,
   image: String,
   resalePrice: Number,
-  product_id: String,
+  product_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product' // Reference to the Product model
+  },
   paid: Boolean,
   transactionId: String,
 });
@@ -16,4 +19,4 @@ const bookingSchema = new mongoose.Schema({
 const Booking = mongoose.model('Booking', bookingSchema);
  
 
-export default Booking;
+module.exports = Booking;
