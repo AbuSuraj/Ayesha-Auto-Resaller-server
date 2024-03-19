@@ -74,6 +74,7 @@ app.post('/addcategory',verifyJWT,verifyAdmin,async (req,res) =>{
   res.send(result);
 })
 
+
 // add a reported item to db
 app.post('/report',verifyJWT,async (req,res) =>{
   const report = req.body;
