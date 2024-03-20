@@ -1,9 +1,15 @@
 // routes/productRoutes.js
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import productController from '../controllers/productController';
+const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js')
+ 
+const productController = require('../../controllers/products/products.controller.js')
 
-router.get('/category/:id', productController.getProductsByCategoryId);
-router.post('/addproduct', productController.addProduct);
 
-export default router;
+router.get('/advertisement', productController.getAdvertisementItems);
+router.patch('/advertisement/:id', verifyJWT, productController.changeProductStatus);
+router.delete('/:id', verifyJWT, productController.deleteProduct);
+router.get('/seller/:email', verifyJWT, productController.getProductsBySellerEmail);
+router.post('/add',  productController.addProduct);
+
+module.exports = router;

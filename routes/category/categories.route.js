@@ -1,23 +1,17 @@
-import express from 'express';
-// import categoryController from '../../controllers/category/category.controller.js';
-// const router = express.Router();
-
-// // add a categories to db
-
-// router.get('/get-all')
-// router.post('/add',categoryController.addCategory)
-
-   
-// export default router;
-// routes/categoryRoutes.js
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import categoryController from '../controllers/categoryController';
+const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js')
+// Import controllers
+const categoryController = require('../../controllers/category/category.controller.js');
+const productController = require('../../controllers/products/products.controller.js')
 
-router.get('/categories', categoryController.getAllCategories);
-router.post('/addcategory', categoryController.addCategory);
 
-export default router;
+router.post('/add', categoryController.addCategory);
+router.get('/',categoryController.getCategories);
+router.get('/:id', verifyJWT, productController.getProductsByCategoryId);
+
+module.exports = router;
+
 
 /**
    * @api {post} /add-new category

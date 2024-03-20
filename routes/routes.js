@@ -2,24 +2,23 @@ const express = require('express');
 const router = express.Router();
 const { verifyJWT, verifyAdmin } = require('../middleware/checkAuth.js')
 // Import controllers
-const categoryController = require('../controllers/category/category.controller.js');
+// const categoryController = require('../controllers/category/category.controller.js');
 const reportController = require('../controllers/report/report.controller.js');
 const userController = require('../controllers/users/users.controller.js');
 const bookingController = require('../controllers/booking/booking.controller.js');
 const productController = require('../controllers/products/products.controller.js');
 const paymentController = require('../controllers/payment/payment.controller.js');
-
+const categoryRoutes = require('../routes/category/categories.route.js');
+const productsRoutes = require('../routes/products/products.route.js');
 // Routes for products
-router.get('/products/advertisement', productController.getAdvertisementItems);
-router.patch('/products/advertisement/:id', verifyJWT, productController.changeProductStatus);
-router.delete('/products/:id', verifyJWT, productController.deleteProduct);
-router.get('/products/seller/:email', verifyJWT, productController.getProductsBySellerEmail);
-router.post('/products/add', verifyJWT, productController.addProduct);
+router.use('/products', productsRoutes);
+
 
 // Routes for categories
-router.post('/categories/add', categoryController.addCategory);
-router.get('/categories',categoryController.getCategories);
-router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
+router.use('/categories', categoryRoutes);
+// router.post('/categories/add', categoryController.addCategory);
+// router.get('/categories',categoryController.getCategories);
+// router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
 
 // Routes for reports
 router.post('/report', verifyJWT, reportController.addReport);
