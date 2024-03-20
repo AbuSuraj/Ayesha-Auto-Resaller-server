@@ -14,21 +14,20 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to the database using dbConnect method
-dbConnect().then(client => {
-  const db = client.db('ayeshaAutoReseller');
+dbConnect()
+
+  // const db = client.db('ayeshaAutoReseller');
 
   // Pass the database instance to routes and controllers
-  app.use((req, res, next) => {
-    req.db = db;
-    next();
-  });
+  // app.use((req, res, next) => {
+  //   // req.db = db;
+  //   next();
+  // });
 
   // Use the routes
   app.use('/', routes);
 
-}).catch(err => {
-  console.error('Failed to connect to the database:', err);
-});
+
 
 app.get('/', (req, res) => {
   res.send('Ayesha Auto Reseller server is running');

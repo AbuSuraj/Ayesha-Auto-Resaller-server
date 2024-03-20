@@ -3,8 +3,8 @@ const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js');
 exports.addCategory = async (req, res) => {
   try {
 // Verify JWT and Admin
-    verifyJWT(req, res);
-    verifyAdmin(req, res);
+    // verifyJWT(req, res);
+    // verifyAdmin(req, res);
 
     const categoryData = req.body;
     const result = await Category.create(categoryData);
@@ -20,8 +20,8 @@ exports.getCategories = async (req, res) => {
 // Verify JWT  
     // verifyJWT(req, res);
 
-    const categories = await Category.find();
-    res.json(categories);
+    const categories = await Category.find({});
+    res.send(categories);
   }  catch (error) {
     console.error("Error fetching categories:", error);
     res.status(500).json({ error: "Failed to fetch categories", details: error.message });

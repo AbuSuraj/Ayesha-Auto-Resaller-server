@@ -17,7 +17,7 @@ router.get('/products/seller/:email', verifyJWT, productController.getProductsBy
 router.post('/products/add', verifyJWT, productController.addProduct);
 
 // Routes for categories
-router.post('/categories/add', verifyJWT, verifyAdmin,categoryController.addCategory);
+router.post('/categories/add', categoryController.addCategory);
 router.get('/categories',categoryController.getCategories);
 router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
 
@@ -49,7 +49,7 @@ router.get('/buyers', verifyJWT, verifyAdmin, userController.getAllBuyers);
 router.delete('/seller/:id', verifyJWT, verifyAdmin, userController.deleteSeller);
 
 // Get all sellers route
-router.get('/sellers', verifyJWT, verifyAdmin, userController.getAllSellers);
+router.get('/sellers',  userController.getAllSellers);
 
 
 // Routes for bookings
