@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {handlePayment} = require('../../controllers/payment/payment.controller.js');
-
-// Middleware to parse JSON in request body
-router.use(express.json());
-
-// Payment route
-router.post('/', handlePayment);
+const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js')
+ 
+const paymentController = require('../../controllers/payment/payment.controller.js');
+ 
+router.post('/', verifyJWT, paymentController.addPayment);
+router.get('/create-payment-intent', verifyJWT, paymentController.createPaymentIntent);
 
 module.exports = router;

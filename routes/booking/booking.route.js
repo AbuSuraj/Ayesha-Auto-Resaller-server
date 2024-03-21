@@ -1,8 +1,12 @@
-// routes/bookingRoutes.js
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import bookingController from '../controllers/bookingController';
+const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js')
+ 
+const bookingController = require('../../controllers/booking/booking.controller.js');
 
-router.post('/bookings', bookingController.addBooking);
+router.post('/',  bookingController.addBooking);
+router.get('/:id', bookingController.getBooking);
+// Route for getting buyer orders
+router.get('/orders/:email', verifyJWT, bookingController.getBuyerOrders);
 
-export default router;
+module.exports = router;
