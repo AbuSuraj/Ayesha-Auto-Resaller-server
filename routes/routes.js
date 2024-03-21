@@ -10,6 +10,7 @@ const productController = require('../controllers/products/products.controller.j
 const paymentController = require('../controllers/payment/payment.controller.js');
 const categoryRoutes = require('../routes/category/categories.route.js');
 const productsRoutes = require('../routes/products/products.route.js');
+const reportRoutes = require('../routes/report/report.route.js');
 // Routes for products
 router.use('/products', productsRoutes);
 
@@ -21,11 +22,7 @@ router.use('/categories', categoryRoutes);
 // router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
 
 // Routes for reports
-router.post('/report', verifyJWT, reportController.addReport);
-router.get('/report', verifyJWT, reportController.getReports);
-router.delete('/report/:id', verifyJWT, verifyAdmin, reportController.deleteReport);
-
-router.delete('/reportedItem/:id', verifyJWT, verifyAdmin, reportController.deleteReportedItem);
+router.use('/report', reportRoutes);
 
 // Routes for users
 router.post('/users', userController.addUser);

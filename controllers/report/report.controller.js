@@ -16,7 +16,7 @@ exports.addReport = async (req, res) => {
 
 exports.getReports = async (req, res) => {
   try {
-    verifyJWT(req, res); // Verify JWT
+    // verifyJWT(req, res); // Verify JWT
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -33,9 +33,9 @@ exports.getReports = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    const report = await cursor.toArray();
+    const report = await cursor;
     const totalReports = await Report.countDocuments(query);
-
+     
     res.send({
       data: report,
       total: totalReports,
