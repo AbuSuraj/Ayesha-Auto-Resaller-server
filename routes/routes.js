@@ -11,41 +11,18 @@ const paymentController = require('../controllers/payment/payment.controller.js'
 const categoryRoutes = require('../routes/category/categories.route.js');
 const productsRoutes = require('../routes/products/products.route.js');
 const reportRoutes = require('../routes/report/report.route.js');
+const usersRoutes = require('../routes/users/users.route.js');
 // Routes for products
 router.use('/products', productsRoutes);
 
-
 // Routes for categories
 router.use('/categories', categoryRoutes);
-// router.post('/categories/add', categoryController.addCategory);
-// router.get('/categories',categoryController.getCategories);
-// router.get('/category/:id', verifyJWT, productController.getProductsByCategoryId);
 
 // Routes for reports
 router.use('/report', reportRoutes);
 
 // Routes for users
-router.post('/users', userController.addUser);
-router.get('/user/:email', userController.getUser);
-router.get('/users/admin/:email', verifyJWT, userController.isAdmin);
-router.get('/users/seller/:email', verifyJWT, userController.isSeller);
-router.get('/users/buyer/:email', verifyJWT, userController.isBuyer);
-
-// Verify seller route
-router.patch('/verifySeller/:id', verifyJWT, verifyAdmin, userController.verifySeller);
- 
-
-// Delete buyer route
-router.delete('/buyer/:id', verifyJWT, verifyAdmin, userController.deleteBuyer);
-
-// Get all buyers route
-router.get('/buyers', verifyJWT, verifyAdmin, userController.getAllBuyers);
-
-// Delete seller route
-router.delete('/seller/:id', verifyJWT, verifyAdmin, userController.deleteSeller);
-
-// Get all sellers route
-router.get('/sellers',  userController.getAllSellers);
+router.use('/users', usersRoutes);
 
 
 // Routes for bookings

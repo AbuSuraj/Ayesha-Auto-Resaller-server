@@ -1,4 +1,4 @@
-const Report = require('../../model/report/Report.model.js');
+const Report = require('../../model/report/report.model.js');
 const Product = require('../../model/products/Products.model.js')
 const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js');  
 

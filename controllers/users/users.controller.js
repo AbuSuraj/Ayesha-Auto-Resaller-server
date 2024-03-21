@@ -68,6 +68,7 @@ exports.deleteSeller = async (req, res) => {
 };
 
 exports.getAllSellers = async (req, res) => {
+  console.log('sellers');
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
