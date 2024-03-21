@@ -7,6 +7,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const routes = require('./routes/routes');
 const port = process.env.PORT || 5000;
+const jwtRoute = require('./routes/jwt/jwt.route.js')
 const { dbConnect } = require('./utils/DB/dbConnect.js')
 
 // Middlewares
@@ -25,6 +26,9 @@ dbConnect()
   // });
 
   // Use the routes
+
+  app.use('/jwt', jwtRoute);
+
   app.use('/', routes);
 
 

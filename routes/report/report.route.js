@@ -8,6 +8,6 @@ router.post('/', verifyJWT, reportController.addReport);
 router.get('/', verifyJWT, reportController.getReports);
 router.delete('/:id', verifyJWT, verifyAdmin, reportController.deleteReport);
 
-router.delete('/reported/:id', verifyJWT, verifyAdmin, reportController.deleteReportedItem);
+router.delete('/item/:id', verifyJWT, verifyAdmin, reportController.deleteReportedItem);
 
 module.exports = router;
