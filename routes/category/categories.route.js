@@ -6,7 +6,7 @@ const categoryController = require('../../controllers/category/category.controll
 const productController = require('../../controllers/products/products.controller.js')
 
 
-router.post('/add', categoryController.addCategory);
+router.post('/add',verifyJWT, verifyAdmin, categoryController.addCategory);
 router.get('/',categoryController.getCategories);
 router.get('/:id', verifyJWT, productController.getProductsByCategoryId);
 

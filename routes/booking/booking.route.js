@@ -4,7 +4,7 @@ const { verifyJWT, verifyAdmin } = require('../../middleware/checkAuth.js')
  
 const bookingController = require('../../controllers/booking/booking.controller.js');
 
-router.post('/',  bookingController.addBooking);
+router.post('/', verifyJWT, bookingController.addBooking);
 router.get('/:id', bookingController.getBooking);
 // Route for getting buyer orders
 router.get('/orders/:email', verifyJWT, bookingController.getBuyerOrders);

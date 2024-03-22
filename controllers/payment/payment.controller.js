@@ -1,6 +1,7 @@
 const Payment = require('../../model/payment/Payment.model.js');
 const Booking = require('../../model/payment/Payment.model.js');
 const Product = require('../../model/products/Products.model.js');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // const { bookingsCollection, productCollection } = require('../your-database-setup');  
 exports.addPayment = async (req, res) => {
   try {
@@ -36,8 +37,8 @@ exports.addPayment = async (req, res) => {
 
 exports.createPaymentIntent = async (req, res) => {
   try {
-    const { booking } = req.body;
-    const { resalePrice } = booking;
+   
+    const { resalePrice } = req.body;;
     const paymentIntent = await stripe.paymentIntents.create({
       currency: 'bdt',
       amount: resalePrice * 100, // Amount in cents

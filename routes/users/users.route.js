@@ -12,13 +12,13 @@ router.patch('/verify-seller/:id', verifyJWT, verifyAdmin, userController.verify
 router.delete('/buyer/:id', verifyJWT, verifyAdmin, userController.deleteBuyer);
 
 // Get all buyers route
-router.get('/buyers', userController.getAllBuyers);
+router.get('/buyers', verifyJWT, verifyAdmin,userController.getAllBuyers);
 
 // Delete seller route
 router.delete('/seller/:id', verifyJWT, verifyAdmin, userController.deleteSeller);
 
 // Get all sellers route
-router.get('/sellers',  userController.getAllSellers);
+router.get('/sellers', verifyJWT, verifyAdmin, userController.getAllSellers);
 
 router.post('/', userController.addUser);
 router.get('/:email', userController.getUser);

@@ -10,6 +10,6 @@ router.get('/advertisement', productController.getAdvertisementItems);
 router.patch('/advertisement/:id', verifyJWT, productController.changeProductStatus);
 router.delete('/:id', verifyJWT, productController.deleteProduct);
 router.get('/seller/:email', verifyJWT, productController.getProductsBySellerEmail);
-router.post('/add',  productController.addProduct);
+router.post('/add',verifyJWT,  productController.addProduct);
 
 module.exports = router;
